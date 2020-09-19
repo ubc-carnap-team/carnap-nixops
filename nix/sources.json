@@ -1,0 +1,38 @@
+{
+    "nixops": {
+        "branch": "master",
+        "description": "NixOps is a tool for deploying to NixOS machines in a network or cloud.",
+        "homepage": "https://nixos.org/nixops",
+        "owner": "nixos",
+        "repo": "nixops",
+        "rev": "0c467cda1ecab0856aa9ff8646261299e5492694",
+        "sha256": "1z1bgvbkh829rb7n2c348z3rn2scwdclvah4x3qwqk4y5v2wfq71",
+        "type": "tarball",
+        "url": "https://github.com/nixos/nixops/archive/0c467cda1ecab0856aa9ff8646261299e5492694.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixops-digitalocean": {
+        "branch": "no-kitchen-sink",
+        "description": "NixOps Digitalocean plugin [maintainer=@Kiwi] ",
+        "homepage": "",
+        "owner": "Kiwi",
+        "repo": "nixops-digitalocean",
+        "rev": "8fe2f274d9b14c6e90c02645d20e12f7f911e0e5",
+        "sha256": "1l0wfq4wj6wcc8dpxa424zh1x8acmbw1k3wnb27a87ghfbanpbic",
+        "type": "tarball",
+        "url": "https://github.com/Kiwi/nixops-digitalocean/archive/8fe2f274d9b14c6e90c02645d20e12f7f911e0e5.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "fix-caddy-configs-hack",
+        "description": "Nix Packages collection",
+        "homepage": null,
+        "owner": "lf-",
+        "repo": "nixpkgs",
+        "rev": "34d5396e26822d2fa86babd0f1cc70aab67e4362",
+        "sha256": "0lp7i80szwha5fq2r15rk010pjp5ldbp1rb2lrpxlm9l4vgr761f",
+        "type": "tarball",
+        "url": "https://github.com/lf-/nixpkgs/archive/34d5396e26822d2fa86babd0f1cc70aab67e4362.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}

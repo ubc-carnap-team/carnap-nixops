@@ -1,0 +1,142 @@
+let
+  carnap = import ../carnap {};
+  inherit (carnap) nixpkgs;
+  inherit (nixpkgs.lib) optional optionalString;
+  inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname email googlekeys sshKeys digitaloceanToken;
+
+  machine = { staging, localtest ? false, deployment }: {pkgs, ...}: {
+    imports = if localtest then [ ./localtest-hardware-config.nix ./localtest-config.nix ] else [];
+    inherit deployment;
+    users.users.jade = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+      openssh.authorizedKeys.keys = sshKeys;
+    };
+    users.users.carnap = {
+      isSystemUser = true;
+      home = "/var/lib/carnap";
+      uid = 500;
+    };
+    users.groups.carnap.gid = 500;
+
+    services.openssh.enable = true;
+    services.openssh.passwordAuthentication = false;
+    networking.firewall.allowedTCPPorts = [ 80 443 ];
+
+    documentation.enable = false;
+
+    services.postgresql.enable = true;
+    services.postgresql.package = nixpkgs.postgresql_12;
+    services.postgresql.ensureDatabases = [ "carnapdb" ];
+    services.postgresql.ensureUsers = [
+      {
+        name = "carnap";
+        ensurePermissions = {
+          # TODO: possibly should be hardened but requirements are undocumented :/
+          "DATABASE carnapdb" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+
+    systemd.services.carnap = {
+      description = "Carnap server";
+      after = [ "postgresql.service" ];
+      path = [ carnap.server ];
+      wantedBy = [ "multi-user.target" ];
+
+      preStart = ''
+        cp -r --no-preserve=mode ${carnap.server}/share/* /var/lib/carnap/
+        for book in /var/lib/carnap/books/*; do mkdir $book/cache; done
+        mkdir -p /var/lib/carnap/data
+      '';
+
+      environment = {
+        APPROOT = "https://${hostname staging}";
+        BOOKROOT = "/var/lib/carnap/books/forallx-ubc";
+        COPYRIGHT = "Copyright (c) 2005–2020 by P.D. Magnus and Jonathan Ichikawa";
+        SQLITE = "false";
+        PGPORT = "";
+        PGHOST = "";
+        PGUSER = "";
+        PGPASS = "";
+      } // googlekeys staging;
+
+      serviceConfig = {
+        ExecStart = ''
+          ${carnap.server}/bin/Carnap-Server
+        '';
+        User = "carnap";
+        Group = "carnap";
+        WorkingDirectory = "/var/lib/carnap";
+      };
+    };
+
+    # create the Carnap home directory
+    systemd.tmpfiles.rules = [
+      "d '/var/lib/carnap' 0755 carnap carnap"
+    ];
+
+    # caddy proxy config. keter is possible for sure but doesn't have a nixos
+    # module
+    services.caddy.package = pkgs.caddy;
+    services.caddy.enable = true;
+    services.caddy.agree = true;
+    services.caddy.email = email;
+    services.caddy.ca = if staging then "https://acme-staging-v02.api.letsencrypt.org/directory"
+      else "https://acme-v02.api.letsencrypt.org/directory";
+    services.caddy.config = ''
+      {
+
+      }
+      https://${hostname staging} {
+        encode zstd gzip
+        log
+        ${optionalString staging "tls internal"}
+        reverse_proxy localhost:3000
+      }
+    '';
+  };
+in
+{
+  network.description = "carnap";
+  network.enableRollback = true;
+
+  resources.sshKeyPairs.ssh-key = {
+    privateKey = builtins.readFile ./secrets/carnapprod;
+    publicKey = builtins.readFile ./secrets/carnapprod.pub;
+  };
+
+  carnap-local = machine {
+    staging = true;
+    localtest = true;
+    deployment = {
+      targetHost = "carnaptest";
+      targetEnv = "none";
+      provisionSSHKey = false;
+    };
+  };
+
+  carnap-do = machine {
+    staging = false;
+    localtest = false;
+    deployment = {
+      targetHost = "carnapprod";
+      targetEnv = "doDroplet";
+      doDroplet = {
+        size = "s-1vcpu-2gb";
+        region = "tor1";
+        authToken = digitaloceanToken;
+      };
+    };
+  };
+
+  # carnap-azure = machine {
+  #   staging = false;
+  #   localtest = false;
+  #   deployment = {
+  #     targetHost = "carnapprod";
+  #     targetEnv = "none";
+  #     provisionSSHKey = false;
+  #   };
+  # };
+}
