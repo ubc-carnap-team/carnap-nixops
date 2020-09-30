@@ -2,7 +2,7 @@ let
   carnap = import ../carnap {};
   inherit (carnap) nixpkgs;
   inherit (nixpkgs.lib) optional optionalString;
-  inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname email googlekeys sshKeys digitaloceanToken;
+  inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname email googlekeys sshKeys;
 
   machine = { staging, localtest ? false, deployment }: {pkgs, ...}: {
     imports = if localtest then [ ./localtest-hardware-config.nix ./localtest-config.nix ] else [];
@@ -46,7 +46,7 @@ let
 
       preStart = ''
         cp -r --no-preserve=mode ${carnap.server}/share/* /var/lib/carnap/
-        for book in /var/lib/carnap/books/*; do mkdir $book/cache; done
+        for book in /var/lib/carnap/books/*; do mkdir -p $book/cache; done
         mkdir -p /var/lib/carnap/data
       '';
 
@@ -98,45 +98,5 @@ let
   };
 in
 {
-  network.description = "carnap";
-  network.enableRollback = true;
-
-  resources.sshKeyPairs.ssh-key = {
-    privateKey = builtins.readFile ./secrets/carnapprod;
-    publicKey = builtins.readFile ./secrets/carnapprod.pub;
-  };
-
-  carnap-local = machine {
-    staging = true;
-    localtest = true;
-    deployment = {
-      targetHost = "carnaptest";
-      targetEnv = "none";
-      provisionSSHKey = false;
-    };
-  };
-
-  carnap-do = machine {
-    staging = false;
-    localtest = false;
-    deployment = {
-      targetHost = "carnapprod";
-      targetEnv = "doDroplet";
-      doDroplet = {
-        size = "s-1vcpu-2gb";
-        region = "tor1";
-        authToken = digitaloceanToken;
-      };
-    };
-  };
-
-  # carnap-azure = machine {
-  #   staging = false;
-  #   localtest = false;
-  #   deployment = {
-  #     targetHost = "carnapprod";
-  #     targetEnv = "none";
-  #     provisionSSHKey = false;
-  #   };
-  # };
+  inherit machine nixpkgs;
 }
