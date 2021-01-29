@@ -4,8 +4,8 @@ let
   inherit (nixpkgs.lib) optional optionalString;
   inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname email googlekeys sshKeys;
 
-  machine = { staging, localtest ? false, deployment }: {pkgs, ...}: {
-    imports = if localtest then [ ./localtest-hardware-config.nix ./localtest-config.nix ] else [];
+  machine = { staging, localtest ? false, configs ? [], deployment }: {pkgs, ...}: {
+    imports = configs;
     inherit deployment;
     users.users.jade = {
       isNormalUser = true;

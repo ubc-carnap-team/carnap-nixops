@@ -2,7 +2,9 @@ let sources = import ./nix/sources.nix;
     nixpkgs = import sources.nixpkgs { };
     #nixpkgs = import ../nixpkgs { };
     nixops = import sources.nixops;
-    nixops-digitalocean = import sources.nixops-digitalocean { };
+    # there's something broken with latest nixpkgs which we were accidentally using on here before
+    # TODO: diagnose it
+    nixops-digitalocean = import sources.nixops-digitalocean { pkgs = nixpkgs; };
     inherit (nixpkgs) mkShell;
 in
 mkShell {
