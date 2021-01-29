@@ -14,10 +14,10 @@ mkShell {
     nixpkgs.caddy
   ];
 
-  shellHook = ''
-    export NIX_PATH="nixpkgs=${sources.nixpkgs}:."
-  '';
   # shellHook = ''
-  #   export NIX_PATH="nixpkgs=../nixpkgs:."
+  #   export NIX_PATH="nixpkgs=${sources.nixpkgs}:."
   # '';
+  shellHook = ''
+    export NIX_PATH="nixpkgs=../nixpkgs:."
+  '';
 }

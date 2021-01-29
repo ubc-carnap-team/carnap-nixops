@@ -10,6 +10,7 @@ in
       targetHost = "carnaptest";
       targetEnv = "none";
       provisionSSHKey = false;
+      hasFastConnection = true;
     };
   };
 }

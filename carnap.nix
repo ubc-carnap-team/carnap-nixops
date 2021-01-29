@@ -53,7 +53,7 @@ let
       environment = {
         APPROOT = "https://${hostname staging}";
         BOOKROOT = "/var/lib/carnap/books/forallx-ubc";
-        COPYRIGHT = "Copyright (c) 2005–2020 by P.D. Magnus and Jonathan Ichikawa";
+        COPYRIGHT = "Copyright (c) 2005–2021 by P.D. Magnus and Jonathan Ichikawa";
         SQLITE = "false";
         PGPORT = "";
         PGHOST = "";
@@ -80,7 +80,6 @@ let
     # module
     services.caddy.package = pkgs.caddy;
     services.caddy.enable = true;
-    services.caddy.agree = true;
     services.caddy.email = email;
     services.caddy.ca = if staging then "https://acme-staging-v02.api.letsencrypt.org/directory"
       else "https://acme-v02.api.letsencrypt.org/directory";
