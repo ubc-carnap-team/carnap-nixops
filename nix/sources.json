@@ -24,15 +24,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "fix-caddy-configs-hack",
+        "branch": "master",
         "description": "Nix Packages collection",
         "homepage": null,
-        "owner": "lf-",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "34d5396e26822d2fa86babd0f1cc70aab67e4362",
-        "sha256": "0lp7i80szwha5fq2r15rk010pjp5ldbp1rb2lrpxlm9l4vgr761f",
+        "rev": "30cbff78204753101f9f2c2791aa0d2f481c0d45",
+        "sha256": "1d0lwzz0v0l8h6v4i0j60rqfbvlk63hrdsng9y1s2lnmsmp53wpc",
         "type": "tarball",
-        "url": "https://github.com/lf-/nixpkgs/archive/34d5396e26822d2fa86babd0f1cc70aab67e4362.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/30cbff78204753101f9f2c2791aa0d2f481c0d45.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
