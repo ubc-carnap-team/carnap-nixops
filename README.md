@@ -44,8 +44,4 @@ Create it with `ssh-keygen -f carnapprod`.
 
 ## TODO
 
-- Support deploying local-only for staging testing. Probably requires a
-  refactor, but not a terribly complicated one (we already have the reusability,
-  just move the definition of the `machine` function into another file)
-
 - Document usage more.
