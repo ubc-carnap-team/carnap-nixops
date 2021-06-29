@@ -52,6 +52,7 @@ let
 
       environment = {
         APPROOT = "https://${hostname staging}";
+        DATAROOT = "/var/lib/carnap";
         BOOKROOT = "/var/lib/carnap/books/forallx-ubc";
         COPYRIGHT = "Copyright (c) 2005–2021 by P.D. Magnus and Jonathan Ichikawa";
         SQLITE = "false";
