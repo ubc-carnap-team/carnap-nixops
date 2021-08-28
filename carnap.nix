@@ -2,7 +2,7 @@ let
   carnap = import ../carnap {};
   inherit (carnap) nixpkgs;
   inherit (nixpkgs.lib) optional optionalString;
-  inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname email googlekeys sshKeys;
+  inherit (import ./secrets/private.nix {inherit nixpkgs; }) hostname localCaddyConfig email googlekeys sshKeys;
 
   machine = { staging, localtest ? false, configs ? [], deployment }: {pkgs, ...}: {
     imports = configs;
@@ -88,6 +88,9 @@ let
       {
 
       }
+
+      ${localCaddyConfig staging}
+
       https://${hostname staging} {
         encode zstd gzip
         log

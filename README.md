@@ -23,6 +23,8 @@ in
   hostname = staging: "carnap${optionalString staging "-staging"}.example.com";
   email = "letsencrypt@example.com";
 
+  localCaddyConfig = staging: "";
+
   googlekeys = staging: if !staging then {
     # prod keys
     GOOGLEKEY = "secretsecretsecret";
