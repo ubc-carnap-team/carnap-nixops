@@ -15,8 +15,8 @@ in
     localtest = false;
     deployment = {
       targetHost = "carnapprod";
-      targetEnv = "doDroplet";
-      doDroplet = {
+      targetEnv = "droplet";
+      droplet = {
         size = "s-1vcpu-2gb";
         region = "tor1";
         authToken = digitaloceanToken;

@@ -12,6 +12,15 @@ let
       extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
       openssh.authorizedKeys.keys = sshKeys;
     };
+    # for debugging mostly, but it would be useful to correlate these
+    security.auditd.enable = true;
+    security.audit.enable = true;
+    security.audit.rules = [
+      "-w /var/lib/carnap -p wa -k carnap-file-write"
+      "-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -S rmdir -F dir=/var/lib/carnap -k carnap-delete"
+      "-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -S rmdir -F dir=/var/lib/carnap -k carnap-delete"
+    ];
+
     users.users.carnap = {
       isSystemUser = true;
       home = "/var/lib/carnap";

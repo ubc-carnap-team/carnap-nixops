@@ -17,6 +17,7 @@ mkShell {
   ];
 
   shellHook = ''
+    export NIXOPS_STATE=deployments.nixops
     export NIX_PATH="nixpkgs=${sources.nixpkgs}:."
   '';
   # shellHook = ''
