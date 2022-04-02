@@ -7,11 +7,7 @@ let
   machine = { staging, localtest ? false, configs ? [], deployment }: {pkgs, ...}: {
     imports = configs;
     inherit deployment;
-    users.users.jade = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-      openssh.authorizedKeys.keys = sshKeys;
-    };
+
     # for debugging mostly, but it would be useful to correlate these
     security.auditd.enable = true;
     security.audit.enable = true;
@@ -25,6 +21,7 @@ let
       isSystemUser = true;
       home = "/var/lib/carnap";
       uid = 500;
+      group = "carnap";
     };
     users.groups.carnap.gid = 500;
 
